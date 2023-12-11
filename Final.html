@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List</title>
+  <style>
+    .completed {
+      text-decoration: line-through;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>To-Do List</h1>
+
+  <form id="todoForm">
+    <label for="todoInput">Add a new todo:</label>
+    <input type="text" id="todoInput" required>
+    <button type="submit">Add</button>
+  </form>
+
+  <ul id="todoList"></ul>
+
+  <script>
+    const todos = [];
+
+    function renderTodos() {
+      const todoList = document.getElementById('todoList');
+      todoList.innerHTML = '';
+
+      todos.forEach((todo, index) => {
+        const listItem = document.createElement('li');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = todo.complete;
+        const todoText = document.createElement('span');
+        todoText.textContent = todo.text;
+
+        if (todo.complete) {
+          todoText.classList.add('completed');
+        }
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'X';
+
+        checkbox.addEventListener('change', () => {
+          todos[index].complete = checkbox.checked;
+          renderTodos();
+        });
+
+        deleteButton.addEventListener('click', () => {
+          todos.splice(index, 1);
+          renderTodos();
+        });
+
+        listItem.appendChild(checkbox);
+        listItem.appendChild(todoText);
+        listItem.appendChild(deleteButton);
+        todoList.appendChild(listItem);
+      });
+    }
+
+    const todoForm = document.getElementById('todoForm');
+    todoForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const todoInput = document.getElementById('todoInput');
+      const newTodo = {
+        text: todoInput.value,
+        complete: false,
+      };
+      todos.push(newTodo);
+      todoInput.value = '';
+      renderTodos();
+    });
+
+    renderTodos();
+  </script>
+
+</body>
+</html>
